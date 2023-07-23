@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
+</head>
+<body>
+<div style="text-align: center; width: 500px; margin-right: auto; margin-left: auto">
+    <h1>Join</h1>
+    <form action="/join" method="post" th:object="${memberJoinDto}">
+        ID: <input style="width: 400px" type="text" th:field="*{username}">
+        <p th:if="${joinErrorMsg}" th:text="${joinErrorMsg}"></p>
+        Password: <input style="width: 400px" type="password" th:field="*{password}">
+        <input style="margin-left: 160px;" type="submit" value="Join">
+    </form>
+</div>
+
+</body>
+</html>
