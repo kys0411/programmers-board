@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
+    <style>
+        .nav-link {
+            margin-right: 30px;
+        }
+    </style>
+</head>
+<body>
+<header style="padding: 10px 20px; margin:0px 20px; height: 60px;">
+    <nav style="margin-bottom: 0px">
+        <ul>
+            <a class="nav-link" th:href="@{/}">메인화면</a>
+            <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/join}">회원가입</a>
+            <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a>
+            <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
+            <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}">게시글 작성</a>
+            <a style="margin-right: 70px" class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/post/new}">게시글
+                작성</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/member/{id}(id=${memberId})}"
+               th:text="${member} +' ' + 님"></a>
+        </ul>
+    </nav>
+
+
+</header>
+
+<div style="width: 800px; margin: 80px auto 0px auto">
+    <div>
+        <form style="padding: 0; border: none" action="/search">
+            <input style="margin-right: 0; width: 600px; float:left" type="search" name="keyword"
+                   placeholder="검색어를 입력하세요">
+            <input style="margin-left: 20px; margin-top: 0; padding: 6px 25px" type="submit" value="검색">
+        </form>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th style="padding-left: 30px; padding-right: 30px">글 번호</th>
+            <th style="padding-left: 100px; padding-right: 100px">제목</th>
+            <th style="padding-left: 40px; padding-right: 40px">작성자</th>
+            <th style="padding-left: 100px; padding-right: 100px">작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post : ${boardList}">
+            <td th:text="${post.id}"></td>
+            <td>
+                <a th:text="${post.title}" th:href="@{/post/{id}(id=${post.id})}"></a>
+            </td>
+            <td th:text="${post.member.username}"></td>
+            <td th:text="${post.createdAt}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${!boardList.isEmpty()}">
+        <nav style="text-align: center;">
+            <ul class="pagination"
+                th:with="start=${T(java.lang.Math).floor(boardList.number/10)*10 + 1},
+                    last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
+                <li>
+                    <a th:href="@{/search/(keyword=${keyword}, page=0)}" aria-label="First">
+                        <span aria-hidden="true">First</span>
+                    </a>
+                </li>
+
+                <li th:class="${boardList.first} ? 'disabled'">
+                    <a th:href="${boardList.first} ? '#' :@{/search/(keyword=${keyword},page=${boardList.number-1})}"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&lt;</span>
+                    </a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(start, last)}"
+                    th:class="${page == boardList.number + 1} ? 'active'">
+                    <a th:text="${page}" th:href="@{/search/(keyword=${keyword}, page=${page-1})}"></a>
+                </li>
+
+                <li th:class="${boardList.last} ? 'disabled'">
+                    <a th:href="${boardList.last} ? '#' : @{/search/(keyword=${keyword},page=${boardList.number + 1})}"
+                       aria-label="Next">
+                        <span aria-hidden="true">&gt;</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/search/(keyword=${keyword}, page=${boardList.totalPages-1})}" aria-label="Last">
+                        <span aria-hidden="true">Last</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+</body>
+</html>
