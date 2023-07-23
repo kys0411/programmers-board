@@ -1,6 +1,7 @@
 package programmers.noticeBoard.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import programmers.noticeBoard.domain.Member;
 import programmers.noticeBoard.dto.MemberDto;
@@ -11,6 +12,7 @@ import programmers.noticeBoard.repository.MemberRepository;
 public class SignService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void signUp(MemberDto.Request request){
         if (memberRepository.findByUsername(request.getUsername()).isPresent()) {
@@ -18,6 +20,7 @@ public class SignService {
         }
 
         Member member = new Member(request.getUsername(), request.getPassword());
+        member.encodePassword(passwordEncoder);
 
         memberRepository.save(member);
     }
