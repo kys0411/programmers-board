@@ -42,6 +42,18 @@ public class PostService {
         return postRepository.findAllByMember(pageable, member).map(this::toDto);
     }
 
+    public PostDto.Response update(Long id, PostDto.Request request, Member member) {
+        Post post = findPostById(id);
+
+        if (member.getId() != post.getMember().getId()) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
+        post.updatePost(request.getTitle(), request.getContent());
+
+        return toDto(post);
+    }
+    
     public Post findPostById(Long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 게시글이 없습니다."));
