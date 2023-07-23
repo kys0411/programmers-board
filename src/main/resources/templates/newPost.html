@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>글</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
+</head>
+<body>
+<div style="text-align: center; width: 800px; margin-right: auto; margin-left: auto">
+    <h1>new Post</h1>
+    <form th:action="@{/post/new}" method="post" th:object="${postNewDto}">
+        <div>
+            <label th:for="title">제목</label>
+            <input type="text" th:field="*{title}">
+        </div>
+
+        <div>
+            <label th:for="content">내용</label>
+            <textarea rows="15" th:field="*{content}"></textarea>
+        </div>
+
+        <button type="submit">글 작성</button>
+    </form>
+</div>
+</body>
+</html>
