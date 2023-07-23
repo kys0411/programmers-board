@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>dfsd</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
+</head>
+<body>
+    <header>
+        <div>
+            <a style="margin-right: 20px; margin-left: 20px" th:href="@{/}">메인화면</a>
+            <a style="margin-right: 20px; margin-left: 20px" th:if="${member == post.member.username}" th:href="@{/post/update/{id}(id=${post.id})}">수정</a>
+            <a style="margin-right: 20px; margin-left: 20px" th:if="${member == post.member.username}" th:href="@{/post/delete/{id}(id=${post.id})}">삭제</a>
+        </div>
+    </header>
+    <div style="width: 800px; margin-left: auto; margin-right: auto">
+        <div style="text-align: right">
+            <h6 th:text="작성일 + ' ' + ${post.createdAt}"></h6>
+            <h6 th:text="작성자 + ' ' + ${post.member.username}"></h6>
+        </div>
+        <div>
+            <h1 style="text-align: center" th:text="${post.title}"></h1>
+        </div>
+        <div>
+            <h3 style="text-align: center; margin-bottom: 150px" th:text="${post.content}"></h3>
+        </div>
+    </div>
+
+
+    <div sec:authorize="isAuthenticated()" style="width: 800px; margin: 0 auto">
+        <form style="text-align: center" th:action="@{/comment/new/{id}(id=${post.id})}" method="post" th:object="${commentNewDto}">
+            <input type="text" placeholder="댓글을 입력하세요" th:field="*{content}">
+            <button type="submit">댓글 작성</button>
+        </form>
+    </div>
+    <div sec:authorize="isAnonymous()" style="width: 800px; margin: 0 auto">
+        <form style="text-align: center">
+            <input type="text" placeholder="로그인 후 댓글 작성이 가능합니다">
+            <button type="submit" disabled>댓글 작성</button>
+        </form>
+    </div>
+    <div style="width: 800px; margin: 0 auto">
+        <table>
+            <thead>
+            </thead>
+            <tbody>
+            <tr th:each="comment : ${commentList}">
+                <td style="width: 70px; padding-left: 30px" th:text="${comment.member.username}"></td>
+                <td style="width: 320px" th:text="${comment.content}"></td>
+                <td style="width: 270px" th:text="${comment.createdAt}"></td>
+                <div th:if="${member == comment.member.username}">
+                    <td><a th:href="@{/comment/delete/{postId}/{commentId}(postId=${post.id}, commentId=${comment.id})}">❌</a></td>
+                </div>
+
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
