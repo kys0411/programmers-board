@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Member Profile</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
+</head>
+<body>
+<div style="text-align: center; border-style: solid">
+    <form enctype="multipart/form-data" th:action="@{/member/update/{id}(id=${memberInfoDto.id})}" method="post" th:object="${memberInfoDto}">
+        <input type="file" id="profileImg" name="profileImg" accept="image/png, image/jpeg">
+        <label th:for="title">한 줄 소개</label>
+        <input type="text" th:field="*{selfIntro}">
+        <button type="submit">프로필 수정</button>
+        <button type="button"><a th:href="@{/member/{id}(id=${memberInfoDto.id})}" style="text-decoration: none; color: white">취소</a></button>
+    </form>
+    <div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
