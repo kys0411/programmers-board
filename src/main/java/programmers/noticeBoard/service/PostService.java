@@ -36,6 +36,12 @@ public class PostService {
         return postRepository.findAll(pageable).map(this::toDto);
     }
 
+    public Page<PostDto.Response> getAllByMember(Pageable pageable, Long memberId) {
+        Member member = memberService.findMemberById(memberId);
+
+        return postRepository.findAllByMember(pageable, member).map(this::toDto);
+    }
+
     public Post findPostById(Long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 게시글이 없습니다."));
