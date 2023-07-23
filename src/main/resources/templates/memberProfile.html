@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Member Profile</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
+</head>
+<body>
+    <div style="text-align: center; border-style: solid; border-radius: 7%; width: 600px; margin-top: 50px; margin-right: auto; margin-left: auto">
+        <img th:if="${member.profileImage != null}"style="width: 300px; height: 300px; border-radius: 50%; margin-top: 50px" th:src="'https://s3.ap-northeast-2.amazonaws.com/umc.booklet/' + ${member.profileImage}">
+        <img th:if="${member.profileImage == null}"style="width: 300px; height: 300px; border-radius: 50%; margin-top: 50px" src="/basic_profile.jpeg">
+        <h1 th:text="ID + ': ' + ${member.username}"></h1>
+        <h3 th:if="${member.selfIntro != null}" th:text="'한 줄 소개' + ': ' + ${member.selfIntro}"></h3>
+        <h3 th:if="${member.selfIntro == null}" text="작성된 소개가 없습니다"></h3>
+        <h3 th:text="가입일 + ': ' + ${member.createdAt}"></h3>
+        <button th:if="${member.username == auth_member}"><a style="text-decoration: none; color: white" th:href="@{/member/update/{id}(id=${member.id})}">프로필 수정</a></button>
+        <button><a th:href="@{/}" style="text-decoration: none; color: white">메인화면</a></button>
+    </div>
+    <div th:if="${!boardList.isEmpty()}"style="margin: 30px auto; width: 700px">
+        <table>
+            <thead>
+            <tr>
+                <th style="padding-left: 30px; padding-right: 30px">글 번호</th>
+                <th style="padding-left: 100px; padding-right: 100px">제목</th>
+                <th style="padding-left: 40px; padding-right: 40px">작성자</th>
+                <th style="padding-left: 100px; padding-right: 100px">작성일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="post : ${boardList}">
+                <td th:text="${post.id}"></td>
+                <td>
+                    <a th:text="${post.title}" th:href="@{/post/{id}(id=${post.id})}"></a>
+                </td>
+                <td th:text="${member.username}"></td>
+                <td th:text="${post.createdAt}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${!boardList.isEmpty()}">
+            <nav style="text-align: center;">
+                <ul class="pagination"
+                    th:with="start=${T(java.lang.Math).floor(boardList.number/10)*10 + 1},
+                    last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
+                    <li>
+                        <a th:href="@{/member/{id}(page=0, id=${member.id})}" aria-label="First">
+                            <span aria-hidden="true">First</span>
+                        </a>
+                    </li>
+
+                    <li th:class="${boardList.first} ? 'disabled'">
+                        <a th:href="${boardList.first} ? '#' :@{/member/{id}(id=${member.id}, page=${boardList.number-1})}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
+                        </a>
+                    </li>
+
+                    <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
+                        <a th:text="${page}" th:href="@{/member/{id}(id=${member.id}, page=${page-1})}"></a>
+                    </li>
+
+                    <li th:class="${boardList.last} ? 'disabled'">
+                        <a th:href="${boardList.last} ? '#' : @{/member/{id}(id=${member.id}, page=${boardList.number + 1})}" aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a th:href="@{/member/{id}(id=${member.id}, page=${boardList.totalPages-1})}" aria-label="Last">
+                            <span aria-hidden="true">Last</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</body>
+</html>
