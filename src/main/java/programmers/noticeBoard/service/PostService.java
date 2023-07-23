@@ -64,6 +64,10 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
+    public Page<PostDto.Response> searchPost(Pageable pageable, String keyword) {
+        return postRepository.findAllByTitleContains(pageable, keyword).map(this::toDto);
+    }
+
     public Post findPostById(Long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 게시글이 없습니다."));
