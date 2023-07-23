@@ -16,9 +16,25 @@ import java.util.NoSuchElementException;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final FileUploadService fileUploadService;
 
     public MemberDto.Response get(Long memberId) {
         Member member = findMemberById(memberId);
+        return toDto(member);
+    }
+
+    public MemberDto.Response updateProfile(Long memberId, MultipartFile multipartFile, MemberDto.Profile request) {
+        Member member = findMemberById(memberId);
+
+        if (!multipartFile.getOriginalFilename().equals("")) {
+            if (member.getProfileImage() != null) {
+                fileUploadService.deleteImage(member.getProfileImage());
+            }
+            String fileName = fileUploadService.uploadImage(multipartFile);
+            member.updateProfileImage(fileName);
+        }
+        member.updateSelfIntro(request.getSelfIntro());
+
         return toDto(member);
     }
 

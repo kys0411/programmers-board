@@ -20,6 +20,14 @@ public class MemberDto {
         private String selfIntro;
     }
 
+    @Getter @Setter
+    public static class Profile {
+
+        private String profileImage;
+
+        private String selfIntro;
+    }
+
     @Getter
     public static class Response {
 
