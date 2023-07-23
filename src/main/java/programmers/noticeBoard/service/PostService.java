@@ -26,6 +26,16 @@ public class PostService {
         return toDto(savePost);
     }
 
+    public PostDto.Response get(Long id) {
+        Post post = findPostById(id);
+        return toDto(post);
+    }
+
+    public Post findPostById(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당 게시글이 없습니다."));
+    }
+
     private PostDto.Response toDto(Post post) {
         return PostDto.Response.builder()
                 .id(post.getId())
