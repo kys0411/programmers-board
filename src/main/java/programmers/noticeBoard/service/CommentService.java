@@ -8,6 +8,7 @@ import programmers.noticeBoard.domain.Member;
 import programmers.noticeBoard.domain.Post;
 import programmers.noticeBoard.dto.CommentDto;
 import programmers.noticeBoard.repository.CommentRepository;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,5 +24,13 @@ public class CommentService {
         Comment comment = new Comment(request.getContent(), member, post);
         post.addComment(comment);
         commentRepository.save(comment);
+    }
+
+    public void deleteComment(Long postId, Long commentId) {
+        Post post = postService.findPostById(postId);
+        Comment comment = commentRepository.findById(commentId)
+                        .orElseThrow(() -> new NoSuchElementException("댓글이 없습니다"));
+        post.deleteComment(comment);
+        commentRepository.deleteById(commentId);
     }
 }
