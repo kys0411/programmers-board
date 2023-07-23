@@ -38,6 +38,11 @@ public class MemberService {
         return toDto(member);
     }
 
+    public void deleteUser(Long memberId) {
+        Member member = findMemberById(memberId);
+        memberRepository.deleteById(memberId);
+    }
+
     public Member findMemberById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("회원이 존재하지 않습니다."));
