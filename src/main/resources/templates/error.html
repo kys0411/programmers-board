@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>error</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
+</head>
+<body>
+<div style="text-align: center; width: 500px; margin-right: auto; margin-left: auto">
+    <h1>Error</h1>
+    <p th:if="${errorMsg}" th:text="${errorMsg}"></p>
+    <a href="/">메인화면</a>
+</div>
+</body>
+</html>
