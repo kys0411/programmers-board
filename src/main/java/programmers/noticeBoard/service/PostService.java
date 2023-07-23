@@ -53,7 +53,17 @@ public class PostService {
 
         return toDto(post);
     }
-    
+
+    public void delete(Long id, Member member) {
+        Post post = findPostById(id);
+
+        if (member.getId() != post.getMember().getId()) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
+        postRepository.deleteById(id);
+    }
+
     public Post findPostById(Long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 게시글이 없습니다."));
