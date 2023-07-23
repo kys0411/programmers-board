@@ -17,6 +17,7 @@ import java.util.NoSuchElementException;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final MemberService memberService;
 
     public PostDto.Response create(PostDto.Request request, Member member) {
         request.setMember(member);
@@ -29,6 +30,10 @@ public class PostService {
     public PostDto.Response get(Long id) {
         Post post = findPostById(id);
         return toDto(post);
+    }
+
+    public Page<PostDto.Response> getAll(Pageable pageable) {
+        return postRepository.findAll(pageable).map(this::toDto);
     }
 
     public Post findPostById(Long id) {
